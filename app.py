@@ -1085,20 +1085,20 @@ if st.session_state.role == "Admin":
           rem_username = st.selectbox("Select Username to Remove", users_list)
           rem_user_btn = st.form_submit_button("Revoke User")
           if rem_user_btn:
-            if rem_username == "admin" and st.session_state.username == "admin":
-              # Basic safety check
-              pass
-            conn = sqlite3.connect(DB_FILE)
-            cursor = conn.cursor()
-            cursor.execute(
-                "DELETE FROM users WHERE username = ?", (rem_username,)
-            )
-            conn.commit()
-            conn.close()
-            st.success(
-                f"User account **{rem_username}** deleted successfully!"
-            )
-            st.rerun()
+            if rem_username == "admin":
+              st.error("Cannot delete the primary administrator account!")
+            else:
+              conn = sqlite3.connect(DB_FILE)
+              cursor = conn.cursor()
+              cursor.execute(
+                  "DELETE FROM users WHERE username = ?", (rem_username,)
+              )
+              conn.commit()
+              conn.close()
+              st.success(
+                  f"User account **{rem_username}** deleted successfully!"
+              )
+              st.rerun()
         else:
           st.caption("No users to remove.")
           st.form_submit_button("Revoke User", disabled=True)

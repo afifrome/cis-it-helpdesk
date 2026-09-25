@@ -393,10 +393,7 @@ if not st.session_state.logged_in:
         else:
           st.error("Invalid operator credentials.")
 
-    st.info(
-        "**Test Credentials:**\n* IT Admin: `admin` / `admin123`\n* Plant Staff:"
-        " `plant_user` / `plant123`"
-    )
+    
   st.stop()
 
 # --- MAIN DASHBOARD ---

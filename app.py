@@ -122,6 +122,7 @@ init_db()
 
 
 # Database helper functions with Role-Based Backend Filtering
+# Database helper functions with Role-Based Backend Filtering
 def load_tickets(role, username):
   conn = sqlite3.connect(DB_FILE)
   if role == "Admin":
@@ -145,7 +146,7 @@ def load_tickets(role, username):
             "created_at": "Created At",
         }
     )
-  return dff
+  return df
 
 
 def load_audit_logs():

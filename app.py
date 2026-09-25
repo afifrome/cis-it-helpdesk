@@ -125,14 +125,15 @@ init_db()
 def load_tickets(role, username):
   conn = sqlite3.connect(DB_FILE)
   if role == "Admin":
+    # Admin sees all tickets (active and closed/archived)
     df = pd.read_sql_query("SELECT * FROM tickets", conn)
   else:
+    # Staff see all ACTIVE tickets across the plant, but no closed ones
     df = pd.read_sql_query(
-        "SELECT * FROM tickets WHERE LOWER(name) = LOWER(?)",
-        conn,
-        params=(username,),
+        "SELECT * FROM tickets WHERE status = 'Open'", conn
     )
   conn.close()
+  
   if not df.empty:
     df = df.rename(
         columns={
@@ -144,7 +145,7 @@ def load_tickets(role, username):
             "created_at": "Created At",
         }
     )
-  return df
+  return dff
 
 
 def load_audit_logs():

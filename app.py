@@ -1147,6 +1147,40 @@ if st.session_state.role == "Admin":
                 " username."
             )
 
+    st.markdown("---")
+    st.markdown("### **Update User Password**")
+    with st.form("change_password_form"):
+      if not df_users.empty:
+        target_user = st.selectbox("Select User to Update Password", df_users["Username"].tolist(), key="change_pwd_user")
+      else:
+        target_user = st.text_input("Username", key="change_pwd_user_text")
+      
+      new_pwd_input = st.text_input("New Password", type="password", key="new_pwd_input")
+      confirm_pwd_input = st.text_input("Confirm New Password", type="password", key="confirm_pwd_input")
+      
+      update_pwd_btn = st.form_submit_button("Update Password")
+      if update_pwd_btn:
+        if not new_pwd_input or not confirm_pwd_input:
+          st.error("Please fill in all password fields.")
+        elif new_pwd_input != confirm_pwd_input:
+          st.error("New passwords do not match!")
+        elif target_user:
+          try:
+            conn = sqlite3.connect(DB_FILE)
+            cursor = conn.cursor()
+            cursor.execute(
+                "UPDATE users SET password = ? WHERE username = ?",
+                (new_pwd_input, target_user),
+            )
+            conn.commit()
+            conn.close()
+            st.success(f"Password for **{target_user}** updated successfully!")
+            st.rerun()
+          except Exception as e:
+            st.error(f"Error updating password: {e}")
+        else:
+          st.error("Please specify a valid user.")
+
   with tab7:
     st.subheader("📹 Hikvision NVR & Plant Surveillance Hub")
     st.markdown(
